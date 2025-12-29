@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +30,29 @@
 body {
   background: var(--bg);
   color: var(--text);
+}
+
+/* SEARCH BAR */
+.search-bar {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  z-index: 200;
+  backdrop-filter: blur(15px);
+  background: var(--glass);
+  border-radius: 40px;
+  padding: 10px 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 1rem;
 }
 
 /* BACKGROUND */
@@ -83,17 +105,6 @@ nav a {
 
 nav a:hover {
   color: var(--accent);
-}
-
-/* MOBILE MENU */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  font-size: 30px;
-  z-index: 999;
-  cursor: pointer;
 }
 
 /* HOME */
@@ -162,16 +173,31 @@ nav a:hover {
   margin-top: 20px;
 }
 
-/* RESPONSIVE */
+/* MOBILE */
+.menu-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  z-index: 999;
+}
+
 @media(max-width: 800px){
   .section { padding-left: 20px; }
   nav { display: none; }
   .menu-btn { display: block; }
+  .search-bar { width: 85%; }
 }
 </style>
 </head>
 
 <body>
+
+<!-- SEARCH -->
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="🔍 Search games or cars..." onkeyup="searchItems()">
+</div>
 
 <div class="menu-btn" onclick="toggleMenu()">☰</div>
 
@@ -188,7 +214,7 @@ nav a:hover {
   <div class="home-content">
     <h1>Hi, I'm <span class="name">Vatsal Varma</span></h1>
     <p>A web developer creating webpages for fun.</p>
-    <button class="btn" onclick="toggleMusic()">🎵 Play Music</button>
+    <button class="btn" onclick="toggleMusic()" id="musicBtn">▶ Play Music</button>
   </div>
 </section>
 
@@ -202,11 +228,11 @@ nav a:hover {
 <section id="explore" class="section">
   <div class="glass">
     <h2>Games</h2>
-    <div class="grid">
-      <div class="card" onclick="saveFav('GTA V')">GTA V</div>
-      <div class="card" onclick="saveFav('Minecraft')">Minecraft</div>
-      <div class="card" onclick="saveFav('Valorant')">Valorant</div>
-      <div class="card" onclick="saveFav('Fortnite')">Fortnite</div>
+    <div class="grid" id="games">
+      <div class="card">NFS - HOT PERSUITE </div>
+      <div class="card">NFS - MOSTWANTED </div>
+      <div class="card">NFS - HEAT </div>
+      <div class="card">NFS - PAYBACK </div>
     </div>
   </div>
 </section>
@@ -214,11 +240,11 @@ nav a:hover {
 <section id="cars" class="section">
   <div class="glass">
     <h2>Cars</h2>
-    <div class="grid">
-      <div class="card" onclick="saveFav('Lamborghini')">Lamborghini</div>
-      <div class="card" onclick="saveFav('Ferrari')">Ferrari</div>
-      <div class="card" onclick="saveFav('BMW')">BMW</div>
-      <div class="card" onclick="saveFav('Tesla')">Tesla</div>
+    <div class="grid" id="carsList">
+      <div class="card">silver BMW</div>
+      <div class="card">Chevy c8</div>
+      <div class="card">Skyline</div>
+      <div class="card">GTR</div>
     </div>
   </div>
 </section>
@@ -226,45 +252,42 @@ nav a:hover {
 <section id="contact" class="section">
   <div class="glass">
     <h2>Contact</h2>
-    <p>Email: yourmail@gmail.com</p>
-    <p>GitHub: github.com/yourname</p>
+    <p>📧 <a href="mailto:gamesvatsal99@gmail.com" style="color:orange">yourmail@gmail.com</a></p>
+    <p>🌐 <a href="https://github.com/vatsalvarma" target="_blank" style="color:orange">github.com/yourname</a></p>
   </div>
 </section>
 
-<audio id="bgMusic" loop autoplay muted>
-  <source src="https://cdn.pixabay.com/audio/2022/10/11/audio_4f1dbbdc62.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+  <source src="Icona Pop - I Love It(001)I Love It (feat. Char.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const music = document.getElementById("bgMusic");
-
-document.body.addEventListener("click", () => {
-  music.muted = false;
-  music.play();
-}, { once: true });
+const musicBtn = document.getElementById("musicBtn");
 
 function toggleMusic() {
-  music.paused ? music.play() : music.pause();
+  if (music.paused) {
+    music.play();
+    musicBtn.innerText = "⏸ Pause Music";
+  } else {
+    music.pause();
+    musicBtn.innerText = "▶ Play Music";
+  }
 }
 
-// Theme
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
 
-// Mobile menu
 function toggleMenu() {
   document.getElementById("sidebar").classList.toggle("show");
 }
 
-// Save favorites
-function saveFav(item) {
-  let favs = JSON.parse(localStorage.getItem("favs")) || [];
-  if (!favs.includes(item)) {
-    favs.push(item);
-    localStorage.setItem("favs", JSON.stringify(favs));
-    alert(item + " added to favorites ❤️");
-  }
+function searchItems() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
+  });
 }
 </script>
 
