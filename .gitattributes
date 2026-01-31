@@ -1,0 +1,9 @@
+*.nim linguist-detectable=true
+
+*.erl linguist-detectable=true
+*.hrl linguist-detectable=true
+*.nim linguist-detectable=true
+
+*.java linguist-detectable=false
+*.html linguist-detectable=false
+*.js linguist-detectable=false
